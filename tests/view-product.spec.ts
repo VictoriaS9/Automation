@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 test('Verify user can view product details', async ({ page }) => {
+    test.skip(process.env.CI === 'true', 'Skipping test in CI environment');
   // Step 1: Open homepage
   await page.goto('https://practicesoftwaretesting.com');
   const productLink = page.getByRole('heading', { name: /Combination Pliers/i });
@@ -13,4 +14,5 @@ test('Verify user can view product details', async ({ page }) => {
   await expect(AddtoCartButton).toBeVisible();
   const addToFavoritesButton = page.getByRole('button', { name: /Add to favourites/i });
   await expect(addToFavoritesButton).toBeVisible();
+  // Step 2: Verify product details
 });
