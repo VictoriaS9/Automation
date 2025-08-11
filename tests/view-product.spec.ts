@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
+if (process.env.CI === 'true') {
+  console.log('⏭️ Skipping test in CI');
+}
 test('Verify user can view product details', async ({ page }) => {
-    test.skip(process.env.CI === 'true', 'Skipping test in CI environment');
+
   // Step 1: Open homepage
   await page.goto('https://practicesoftwaretesting.com');
   const productLink = page.getByRole('heading', { name: /Combination Pliers/i });
