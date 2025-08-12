@@ -9,9 +9,10 @@ test('Verify login with valid credentials',  {
   const loginPage = new LoginPage(page)
   const homePage = new HomePage(page); 
   const accountPage = new AccountPage(page);// ✅ create an instance
-
+  const EMAIL = 'customer@practicesoftwaretesting.com';
+  const PASSWORD = 'welcome01';
   await page.goto('/auth/login');
-  await loginPage.performLogin('customer@practicesoftwaretesting.com', 'welcome01');
+  await loginPage.performLogin(EMAIL, PASSWORD)
   await homePage.verifyWelcomeMessage('Home');
   await accountPage.verifyWelcomeMessage('My account');
   //await page.fill('input[formcontrolname="email"]', 'customer@practicesoftwaretesting.com');

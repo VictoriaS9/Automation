@@ -7,7 +7,7 @@ export class HomePage {
 
     constructor(page: Page) {
         this.page = page;
-        this.welcomeMessage = this.page.locator('nav');
+        this.welcomeMessage = this.page.getByTestId('nav-home');
     }
 
     async verifyWelcomeMessage(expectedName: string): Promise<void> {
