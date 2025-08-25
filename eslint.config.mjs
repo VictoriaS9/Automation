@@ -22,7 +22,6 @@ export default tseslint.config(
         '@typescript-eslint/no-explicit-any':'error',
         "@typescript-eslint/no-floating-promises": "error",
         'playwright/no-conditional-in-test': 'off',
-        "playwright/no-wait-for-timeout": "off"
 
     }
   },

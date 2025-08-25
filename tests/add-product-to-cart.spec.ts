@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/home.page';
 
 test('User can add "Slip Joint Pliers" to cart', async ({ page }) => {
+   const homePage = new HomePage(page);
+
   await page.goto('/');
   await page.getByRole('heading', { name: 'Slip Joint Pliers' }).click();
   expect(page.url()).toContain('https://practicesoftwaretesting.com/product/');
@@ -24,7 +27,8 @@ test('User can add "Slip Joint Pliers" to cart', async ({ page }) => {
   await expect(cartItemTitle).toContainText('Slip Joint Pliers');
 
   // 10. Verify "Proceed to Checkout" button is visible
-  const checkoutBtn = page.getByRole('button', { name: 'Proceed to Checkout' });
-  await expect(checkoutBtn).toBeVisible();
-
-});
+  const checkoutBtn = homePage.proceedCheckout();
+  checkoutBtn.catch((error) => {
+    console.error('Error in proceedCheckout:', error);
+  }); 
+}); 

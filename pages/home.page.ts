@@ -24,7 +24,7 @@ export class HomePage extends BasePage {
         const checkboxID = await this.sanderCheckbox.getAttribute('value');
 
         const responsePromise = this.page.waitForResponse(res =>
-            res.url().includes('/products?page=0&between=price,1,100&by_category=' + checkboxID));
+            res.url().includes(`by_category=${checkboxID}`));
         await this.sanderCheckbox.check();
         await responsePromise;
 
@@ -33,7 +33,10 @@ export class HomePage extends BasePage {
         
         return locator.allTextContents();
     }   
-   
+   async proceedCheckout(): Promise<void> {
+    const checkoutBtn = this.page.getByRole('button', { name: 'Proceed to Checkout' });
+    await expect(checkoutBtn).toBeVisible();
 
 
+}
 }
