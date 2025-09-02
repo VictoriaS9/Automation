@@ -1,4 +1,3 @@
-// tests/product-sorting.spec.ts
 
 import { test, expect } from '@playwright/test';
 import { isSortedAsc } from './helpers/sortUtils.js'; 
