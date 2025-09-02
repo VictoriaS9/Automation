@@ -1,7 +1,7 @@
 // tests/product-sorting.spec.ts
 
 import { test, expect } from '@playwright/test';
-import { isSortedAsc } from './helpers/sortUtils.js'; // Adjust path as needed
+import { isSortedAsc } from './helpers/sortUtils.js'; 
 
 test.describe('Product sorting by name', () => {
   const testCases = [
