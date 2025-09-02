@@ -17,9 +17,6 @@ test('Verify login with valid credentials',  {
   await loginPage.performLogin(EMAIL, PASSWORD)
   await homePage.verifyWelcomeMessage('Home');
   await accountPage.verifyWelcomeMessage('My account');
-  //await page.fill('input[formcontrolname="email"]', 'customer@practicesoftwaretesting.com');
-  //await page.fill('input[type="password"]', 'welcome01');
-  //await page.locator('.btnSubmit').click();
   await expect(page).toHaveURL('https://practicesoftwaretesting.com/account');
   await expect(page.getByTestId("page-title")).toHaveText('My account');
   await expect(page.locator('nav')).toContainText('Jane Doe');

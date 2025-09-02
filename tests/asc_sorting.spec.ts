@@ -19,7 +19,6 @@ test.describe('Product sorting by name', () => {
 
       await sortDropdown.selectOption({ value: 'name,asc' });
 
-      // Wait for the product list to update
       await expect.poll(async () => {
         return await productNameLocators.allTextContents();
       }, {

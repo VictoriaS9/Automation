@@ -1,11 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-// Utility to check if an array of numbers is sorted descending
 function isSortedDesc(arr: number[]): boolean {
   return arr.every((val, i, a) => i === 0 || a[i - 1] >= val);
 }
 
-// Helper to parse price string to number, e.g. "$19.99" => 19.99
 function parsePrice(priceText: string): number {
   return parseFloat(priceText.replace(/[^0-9.]/g, ''));
 }
@@ -39,7 +37,6 @@ test.describe('Product sorting by price', () => {
         message: `Waiting for sorted product list to update for ${label}`
       }).not.toEqual(initialPrices);
 
-      // Get final price list as numbers
       const finalPriceStrings = await productPriceLocators.allTextContents();
       const finalPrices = finalPriceStrings.map(parsePrice);
 
