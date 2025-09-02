@@ -4,7 +4,6 @@ if (process.env.CI === 'true') {
 }
 test('Verify user can view product details', async ({ page }) => {
 
-  // Step 1: Open homepage
   await page.goto('https://practicesoftwaretesting.com');
   const productLink = page.getByRole('heading', { name: /Combination Pliers/i });
   await expect(productLink).toBeVisible();
