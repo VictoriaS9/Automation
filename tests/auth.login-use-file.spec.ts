@@ -8,8 +8,6 @@ test('Verify login with valid credentials',async ({ page }) =>  {
     await page.goto('/');
     await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jane Doe');
 
-  //await page.locator('.btnSubmit').click();
-
 
 });
 

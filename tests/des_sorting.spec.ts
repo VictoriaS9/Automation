@@ -1,6 +1,4 @@
 import { test, expect } from '@playwright/test';
-
-// Utility function to check if array is sorted descending
 function isSortedDesc(arr: string[]): boolean {
   return [...arr].every((v, i, a) => i === 0 || a[i - 1].localeCompare(v) >= 0);
 }
@@ -20,8 +18,6 @@ test.describe('Product sorting by name', () => {
       const initialProductNames = await productNameLocators.allTextContents();
 
       await sortDropdown.selectOption({ value: 'name,desc' });
-
-      // Wait for the product names to change (instead of using waitForTimeout)
       await expect.poll(async () => {
         return await productNameLocators.allTextContents();
       }, {

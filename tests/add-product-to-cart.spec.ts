@@ -25,8 +25,6 @@ test('User can add "Slip Joint Pliers" to cart', async ({ page }) => {
 
   const cartItemTitle = page.getByTestId('product-title');
   await expect(cartItemTitle).toContainText('Slip Joint Pliers');
-
-  // 10. Verify "Proceed to Checkout" button is visible
   const checkoutBtn = homePage.proceedCheckout();
   checkoutBtn.catch((error) => {
     console.error('Error in proceedCheckout:', error);

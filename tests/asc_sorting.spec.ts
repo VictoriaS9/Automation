@@ -1,12 +1,7 @@
-import { test, expect } from '@playwright/test';
+// tests/product-sorting.spec.ts
 
-// Utility function to check if array is sorted ascending
-function isSortedAsc(arr: string[]) {
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i - 1].localeCompare(arr[i]) > 0) return false;
-  }
-  return true;
-}
+import { test, expect } from '@playwright/test';
+import { isSortedAsc } from './helpers/sortUtils.js'; // Adjust path as needed
 
 test.describe('Product sorting by name', () => {
   const testCases = [
@@ -16,14 +11,16 @@ test.describe('Product sorting by name', () => {
   for (const { label, isSorted } of testCases) {
     test(`Verify sorting by ${label}`, async ({ page }) => {
       await page.goto('/');
+      
       const sortDropdown = page.getByTestId('sort');
       await expect(sortDropdown).toBeVisible();
+
       const productNameLocators = page.getByTestId('product-name');
       const initialProductNames = await productNameLocators.allTextContents();
 
       await sortDropdown.selectOption({ value: 'name,asc' });
 
-      // Wait for the product list to change (instead of timeout)
+      // Wait for the product list to update
       await expect.poll(async () => {
         return await productNameLocators.allTextContents();
       }, {
