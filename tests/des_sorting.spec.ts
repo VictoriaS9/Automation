@@ -1,31 +1,28 @@
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/home.page';
+
 function isSortedDesc(arr: string[]): boolean {
   return [...arr].every((v, i, a) => i === 0 || a[i - 1].localeCompare(v) >= 0);
 }
 
 test.describe('Product sorting by name', () => {
   const testCases = [
-    { label: 'Name (Z - A)', isSorted: isSortedDesc }
+    { label: 'Name (Z - A)', sortValue: 'name,desc', isSorted: isSortedDesc }
   ];
 
-  for (const { label, isSorted } of testCases) {
+  for (const { label, sortValue, isSorted } of testCases) {
     test(`Verify sorting by ${label}`, async ({ page }) => {
-      await page.goto('/');
-      const sortDropdown = page.getByTestId('sort');
-      await expect(sortDropdown).toBeVisible();
+      const homePage = new HomePage(page);
 
-      const productNameLocators = page.getByTestId('product-name');
-      const initialProductNames = await productNameLocators.allTextContents();
+      await homePage.navigateToHomePage();
+      await homePage.verifySortDropdownVisible();
 
-      await sortDropdown.selectOption({ value: 'name,desc' });
-      await expect.poll(async () => {
-        return await productNameLocators.allTextContents();
-      }, {
-        timeout: 3000,
-        message: 'Waiting for sorted product list to update (Z - A)'
-      }).not.toEqual(initialProductNames);
+      const initialProductNames = await homePage.getAllProductNames();
 
-      const finalProductNames = await productNameLocators.allTextContents();
+      await homePage.selectSortOption(sortValue);
+
+      const finalProductNames = await homePage.waitForProductNamesToChange(initialProductNames);
+
       expect(isSorted(finalProductNames)).toBeTruthy();
     });
   }

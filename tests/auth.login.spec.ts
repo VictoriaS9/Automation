@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
 import { AccountPage } from '../pages/account.page';
@@ -13,14 +13,14 @@ test('Verify login with valid credentials',  {
   const accountPage = new AccountPage(page);// ✅ create an instance
   const EMAIL = 'customer@practicesoftwaretesting.com';
   const PASSWORD = 'welcome01';
-  await page.goto('/auth/login');
+  await loginPage.gotoLoginPage();
   await loginPage.performLogin(EMAIL, PASSWORD)
   await homePage.verifyWelcomeMessage('Home');
   await accountPage.verifyWelcomeMessage('My account');
-  await expect(page).toHaveURL('https://practicesoftwaretesting.com/account');
-  await expect(page.getByTestId("page-title")).toHaveText('My account');
-  await expect(page.locator('nav')).toContainText('Jane Doe');
-  await page.context().storageState({ path: authFile });
+  await accountPage.verifyOnAccountPage();
+  await accountPage.verifyPageTitle('My account');
+  await accountPage.verifyLoggedInUser('Jane Doe');
+  await accountPage.saveAuthState(authFile);
 
 
 });

@@ -1,20 +1,23 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { HomePage } from '../pages/home.page';
+
 if (process.env.CI === 'true') {
   console.log('⏭️ Skipping test in CI');
 }
 test('Verify user can view product details', async ({ page }) => {
+  const homePage = new HomePage(page);
 
-  await page.goto('https://practicesoftwaretesting.com');
-  const productLink = page.getByRole('heading', { name: /Combination Pliers/i });
-  await expect(productLink).toBeVisible();
-  await productLink.click();
-  await expect(productLink).toHaveText('Combination Pliers');
-  await expect(page).toHaveURL(/.*product/);
-  const productPrice = page.getByTestId('unit-price');
-  await expect(productPrice).toHaveText('14.15');
-  const AddtoCartButton = page.getByRole('button', { name: 'Add to cart' });
-  await expect(AddtoCartButton).toBeVisible();
-  const addToFavoritesButton = page.getByRole('button', { name: /Add to favourites/i });
-  await expect(addToFavoritesButton).toBeVisible();
-  // Step 2: Verify product details
+  await homePage.navigateToHomePage();
+
+   const productName = 'Combination Pliers';
+  const expectedPrice = '14.15';
+
+  await homePage.navigateToHomePage();
+
+  await homePage.openProductByName(productName);
+  await homePage.verifyProductDetails(productName, expectedPrice);
+
+  // Optional: check that buttons are visible
+  await homePage.verifyAddToCartButtonVisible();
+  await homePage.verifyAddToFavoritesButtonVisible();
 });

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/home.page';
 
 function isSortedDesc(arr: number[]): boolean {
   return arr.every((val, i, a) => i === 0 || a[i - 1] >= val);
@@ -19,28 +20,19 @@ test.describe('Product sorting by price', () => {
 
   for (const { label, sortValue, isSorted } of testCases) {
     test(`Verify sorting by ${label}`, async ({ page }) => {
-      await page.goto('https://practicesoftwaretesting.com');
+    const homePage = new HomePage(page);
 
-      const sortDropdown = page.getByTestId('sort');
-      await expect(sortDropdown).toBeVisible();
+      await homePage.navigateToHomePage();
+      await homePage.verifySortDropdownVisible();
+      const initialPriceStrings = await homePage.getAllProductPrices();
 
-      const productPriceLocators = page.getByTestId('product-price');
-      const initialPrices = await productPriceLocators.allTextContents();
+      await homePage.selectSortOption(sortValue);
+      const finalPriceStrings = await homePage.waitForProductPricesToChange(initialPriceStrings);
 
-      await sortDropdown.selectOption({ value: sortValue });
-
-      // Wait until product prices change after sorting
-      await expect.poll(async () => {
-        return await productPriceLocators.allTextContents();
-      }, {
-        timeout: 3000,
-        message: `Waiting for sorted product list to update for ${label}`
-      }).not.toEqual(initialPrices);
-
-      const finalPriceStrings = await productPriceLocators.allTextContents();
       const finalPrices = finalPriceStrings.map(parsePrice);
 
       expect(isSorted(finalPrices)).toBeTruthy();
+
     });
   }
 });

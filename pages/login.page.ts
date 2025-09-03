@@ -6,11 +6,16 @@ export class LoginPage extends BasePage {
     emailField: Locator;
     passwordField: Locator;
     constructor(page: Page){
+    
         super(page);
         this.page = page;
         this.emailField = this.page.locator('input[formcontrolname="email"]');
         this.passwordField = this.page.locator('input[type="password"]');
     }
+
+    async gotoLoginPage(): Promise<void> {
+    await this.page.goto('/auth/login');
+  }
 
     
     async performLogin(email:string, password: string):Promise<void> {

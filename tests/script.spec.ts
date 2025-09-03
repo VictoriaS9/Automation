@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
 import { HomePage } from '../pages/home.page';
 import { AccountPage } from '../pages/account.page';
@@ -15,9 +15,9 @@ test('Verify login with valid credentials',  {
   await loginPage.performLogin(EMAIL, PASSWORD)
   await homePage.verifyWelcomeMessage('Home');
   await accountPage.verifyWelcomeMessage('My account');
-  await expect(page).toHaveURL('https://practicesoftwaretesting.com/account');
-  await expect(page.getByTestId("page-title")).toHaveText('My account');
-  await expect(page.locator('nav')).toContainText('Jane Doe');
+  await accountPage.verifyOnAccountPage();
+  await accountPage.verifyPageTitle('My account');
+  await accountPage.verifyLoggedInUser('Jane Doe');
 
 
 });

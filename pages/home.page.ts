@@ -16,6 +16,55 @@ export class HomePage extends BasePage {
         this.productNames = this.page.getByTestId('product-name');
 
     }
+    async navigateToHomePage(): Promise<void> {
+    await this.page.goto('/');
+  }
+
+    async openProductByName(productName: string): Promise<void> {
+    const productHeading = this.page.getByRole('heading', { name: productName });
+    await productHeading.click();
+    await expect(this.page).toHaveURL(/\/product\//);
+    }
+    
+    async verifyProductDetails(expectedName: string, expectedPrice: string): Promise<void> {
+    const title = this.page.getByRole('heading', { name: expectedName });
+    const price = this.page.getByTestId('unit-price');
+
+    await expect(title).toBeVisible();
+    await expect(price).toHaveText(expectedPrice);
+  }
+  async addProductToCart(): Promise<void> {
+    const addButton = this.page.getByRole('button', { name: 'Add to cart' });
+    await addButton.click();
+  }
+
+  async verifyProductAddedToCartAlert(): Promise<void> {
+    const alert = this.page.getByText('Product added to shopping cart');
+    await expect(alert).toBeVisible();
+    await expect(alert).toHaveCount(0, { timeout: 9000 }); // this might be flaky; consider rethinking this logic
+  }
+
+  async verifyCartCount(expectedCount: string): Promise<void> {
+    const cartCount = this.page.getByTestId('cart-quantity');
+    await expect(cartCount).toHaveText(expectedCount);
+  }
+
+  async goToCart(): Promise<void> {
+    const cartLink = this.page.getByRole('link', { name: 'cart' });
+    await cartLink.click();
+  }
+  async verifyOnCartPage(): Promise<void> {
+    await expect(this.page).toHaveURL('https://practicesoftwaretesting.com/checkout');
+  }
+
+  async verifyCartItem(expectedProductTitle: string): Promise<void> {
+    const cartItemTitle = this.page.getByTestId('product-title');
+    await expect(cartItemTitle).toContainText(expectedProductTitle);
+
+    const cartTableRows = this.page.getByTestId('nav-cart');
+    await expect(cartTableRows).toHaveCount(1);
+  }
+
 
     async verifyWelcomeMessage(expectedName: string): Promise<void> {
         await expect(this.welcomeMessage).toContainText(expectedName);
@@ -39,4 +88,57 @@ export class HomePage extends BasePage {
 
 
 }
+  async selectSortOption(value: string): Promise<void> {
+    const sortDropdown = this.page.getByTestId('sort');
+    await sortDropdown.selectOption({ value });
+  }
+
+  async getAllProductNames(): Promise<string[]> {
+    return await this.page.getByTestId('product-name').allTextContents();
+  }
+   async verifySortDropdownVisible(): Promise<void> {
+    const sortDropdown = this.page.getByTestId('sort');
+    await expect(sortDropdown).toBeVisible();
+  }
+ async waitForProductNamesToChange(previousNames: string[]): Promise<string[]> {
+  const productNameLocators = this.page.getByTestId('product-name');
+  let currentNames: string[] = [];
+
+  await expect.poll(async () => {
+    currentNames = await productNameLocators.allTextContents();
+    return currentNames.join(',');
+  }, {
+    timeout: 3000,
+    message: 'Waiting for sorted product list to load',
+  }).not.toBe(previousNames.join(','));
+
+  return currentNames;
+
+}
+async getAllProductPrices(): Promise<string[]> {
+    return await this.page.getByTestId('product-price').allTextContents();
+  }
+  async waitForProductPricesToChange(previousPrices: string[]): Promise<string[]> {
+    const productPriceLocators = this.page.getByTestId('product-price');
+
+    await expect.poll(async () => {
+      const currentPrices = await productPriceLocators.allTextContents();
+      return currentPrices.join(',');
+    }, {
+      timeout: 3000,
+      message: 'Waiting for sorted product prices to update',
+    }).not.toBe(previousPrices.join(','));
+
+    return await productPriceLocators.allTextContents();
+  }
+  async verifyAddToCartButtonVisible(): Promise<void> {
+  const addButton = this.page.getByRole('button', { name: 'Add to cart' });
+  await expect(addButton).toBeVisible();
+}
+
+async verifyAddToFavoritesButtonVisible(): Promise<void> {
+  const favButton = this.page.getByRole('button', { name: /Add to favourites/i });
+  await expect(favButton).toBeVisible();
+}
+
 }
