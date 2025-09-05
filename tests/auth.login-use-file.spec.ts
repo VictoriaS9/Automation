@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
 
 import path from 'path';
@@ -9,8 +9,7 @@ test.use({
 test('Verify login with valid credentials',async ({ page }) =>  { 
    const homePage = new HomePage(page);
    await homePage.navigateToHomePage();
-   await expect(page.locator('[data-test="nav-menu"]')).toContainText('Jane Doe');
-
+   await homePage.verifyLoggedInUserName('Jane Doe');
 
 });
 

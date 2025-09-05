@@ -1,20 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
+import { isNumericSortedDesc, parsePrice } from './helpers/sortUtils.js';
 
-function isSortedDesc(arr: number[]): boolean {
-  return arr.every((val, i, a) => i === 0 || a[i - 1] >= val);
-}
-
-function parsePrice(priceText: string): number {
-  return parseFloat(priceText.replace(/[^0-9.]/g, ''));
-}
 
 test.describe('Product sorting by price', () => {
   const testCases = [
     {
       label: 'Price (High - Low)',
       sortValue: 'price,desc',
-      isSorted: isSortedDesc
+      isSorted: isNumericSortedDesc
     }
   ];
 

@@ -7,6 +7,7 @@ export class HomePage extends BasePage {
     welcomeMessage: Locator;
     sanderCheckbox: Locator;
     productNames: Locator;
+    navLocator: Locator;
 
     constructor(page: Page) {
         super(page);
@@ -14,6 +15,8 @@ export class HomePage extends BasePage {
         this.welcomeMessage = this.page.getByTestId('nav-home');
         this.sanderCheckbox = this.page.getByRole('checkbox', { name: 'Sander' });
         this.productNames = this.page.getByTestId('product-name');
+        this.navLocator = this.page.locator('nav');
+
 
     }
     async navigateToHomePage(): Promise<void> {
@@ -41,8 +44,7 @@ export class HomePage extends BasePage {
   async verifyProductAddedToCartAlert(): Promise<void> {
     const alert = this.page.getByText('Product added to shopping cart');
     await expect(alert).toBeVisible();
-    await expect(alert).toHaveCount(0, { timeout: 9000 }); // this might be flaky; consider rethinking this logic
-  }
+    await expect(alert).toBeHidden({ timeout: 8000 });  }
 
   async verifyCartCount(expectedCount: string): Promise<void> {
     const cartCount = this.page.getByTestId('cart-quantity');
@@ -54,7 +56,7 @@ export class HomePage extends BasePage {
     await cartLink.click();
   }
   async verifyOnCartPage(): Promise<void> {
-    await expect(this.page).toHaveURL('https://practicesoftwaretesting.com/checkout');
+    await expect(this.page).toHaveURL('/checkout');
   }
 
   async verifyCartItem(expectedProductTitle: string): Promise<void> {
@@ -140,5 +142,12 @@ async verifyAddToFavoritesButtonVisible(): Promise<void> {
   const favButton = this.page.getByRole('button', { name: /Add to favourites/i });
   await expect(favButton).toBeVisible();
 }
+
+async verifyLoggedInUserName(expectedName: string): Promise<void> {
+  const navMenu = this.page.getByTestId('nav-menu');
+  await expect(navMenu).toContainText(expectedName);
+}
+
+
 
 }

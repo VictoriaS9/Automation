@@ -19,7 +19,7 @@ export class AccountPage extends BasePage {
         await expect(this.welcomeMessage).toContainText(expectedName);
     }
       async verifyOnAccountPage(): Promise<void> {
-    await expect(this.page).toHaveURL('https://practicesoftwaretesting.com/account');
+    await expect(this.page).toHaveURL('/account');
   }
 
   async verifyPageTitle(expectedTitle: string): Promise<void> {

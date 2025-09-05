@@ -1,9 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
-
-function isSortedDesc(arr: string[]): boolean {
-  return [...arr].every((v, i, a) => i === 0 || a[i - 1].localeCompare(v) >= 0);
-}
+import { isSortedDesc } from './helpers/sortUtils.js';
 
 test.describe('Product sorting by name', () => {
   const testCases = [
