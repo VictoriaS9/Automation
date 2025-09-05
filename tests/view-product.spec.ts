@@ -17,7 +17,6 @@ test('Verify user can view product details', async ({ page }) => {
   await homePage.openProductByName(productName);
   await homePage.verifyProductDetails(productName, expectedPrice);
 
-  // Optional: check that buttons are visible
   await homePage.verifyAddToCartButtonVisible();
   await homePage.verifyAddToFavoritesButtonVisible();
 });
