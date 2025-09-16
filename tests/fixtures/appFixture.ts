@@ -29,7 +29,6 @@ export const test = base.extend<{
     await app.loginPage.performLogin(USER_EMAIL, USER_PASSWORD);
 
     await page.waitForURL('**/account');
-    await page.waitForTimeout(1000); 
 
     const cookies = await context.cookies();
     console.log('🍪 Cookies after login:', cookies.map(c => c.name));
