@@ -2,7 +2,11 @@ import { test as base } from '@playwright/test';
 import { App } from '../app';
 import path from 'path';
 import fs from 'fs';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const USER_EMAIL = process.env.TEST_USER_EMAIL!;
+const USER_PASSWORD = process.env.TEST_USER_PASSWORD!;
 const authDir = path.join(__dirname, '../playwright/.auth');
 const authFile = path.join(authDir, 'user.json');
 
@@ -22,7 +26,7 @@ export const test = base.extend<{
     const page = await context.newPage();
     const app = new App(page);
     await app.loginPage.gotoLoginPage();
-    await app.loginPage.performLogin('customer@practicesoftwaretesting.com', 'welcome01');
+    await app.loginPage.performLogin(USER_EMAIL, USER_PASSWORD);
 
     await page.waitForURL('**/account');
     await page.waitForTimeout(1000); 
