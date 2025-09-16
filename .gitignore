@@ -8,3 +8,4 @@ node_modules/
 tests/playwright/.auth/user.json
 .env
 
+"playwright/.auth/user.json" 
