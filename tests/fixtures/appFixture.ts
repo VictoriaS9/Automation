@@ -1,7 +1,5 @@
 import { test as base } from '@playwright/test';
 import { App } from '../app';
-import path from 'path';
-import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,11 +7,8 @@ dotenv.config();
 const USER_EMAIL = process.env.TEST_USER_EMAIL!;
 const USER_PASSWORD = process.env.TEST_USER_PASSWORD!;
 
-const authDir = path.join(__dirname, '../playwright/.auth');
-const authFile = path.join(authDir, 'user.json');
-
 interface LoginResponse {
-  token: string; // Adjust if your API returns accessToken or something else
+  token: string; // Adjust if your API returns 'accessToken', etc.
 }
 
 export const test = base.extend<{
@@ -26,10 +21,8 @@ export const test = base.extend<{
   },
 
   loggedInApp: async ({ browser, request }, use) => {
-    console.log('📁 Generating new auth file at:', authFile);
-
-    // 1. Make API call to your backend login endpoint
-    const loginResponse = await request.post('/login', {
+    // 1. Login to get the token
+    const loginResponse = await request.post('https://api.practicesoftwaretesting.com/users/login', {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -40,63 +33,43 @@ export const test = base.extend<{
       },
     });
 
-    // 2. Check if response status is 200 OK
     if (loginResponse.status() !== 200) {
       const errorBody = await loginResponse.text();
-      console.error(`❌ Login failed with status ${loginResponse.status()}`);
-      console.error(`🔍 Response body: ${errorBody}`);
-      throw new Error('Login API failed. Check endpoint or credentials.');
+      console.error(`❌ Login failed (${loginResponse.status()}): ${errorBody}`);
+      throw new Error('Login failed.');
     }
 
-    // 3. Parse JSON safely
     let loginData: LoginResponse;
     try {
-      loginData = await loginResponse.json() as LoginResponse;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      loginData = await loginResponse.json();
     } catch (e) {
       const raw = await loginResponse.text();
-      console.error('❌ Failed to parse login response as JSON', e);
-      console.error('🔍 Status code:', loginResponse.status());
-      console.error('📄 Raw response body:\n', raw);
+      console.error('❌ Failed to parse login response:', e, '\nRaw:', raw);
       throw new Error('Invalid JSON in login response.');
     }
 
-    if (!loginData.token) {
+    const token = loginData.token;
+    if (!token) {
       throw new Error('❌ No token found in login response.');
     }
 
-    const token = loginData.token;
-
-    // 4. Create browser context with localStorage containing token
-    const context = await browser.newContext({
-      storageState: {
-        cookies: [],
-        origins: [
-          {
-            origin: '/', // Change to your app's frontend URL
-            localStorage: [
-              {
-                name: 'auth_token', // Change if your app uses a different key for token in localStorage
-                value: token,
-              },
-            ],
-          },
-        ],
-      },
-    });
-
-    // 5. Save storage state for reuse (optional)
-    if (!fs.existsSync(authDir)) {
-      fs.mkdirSync(authDir, { recursive: true });
-    }
-    await context.storageState({ path: authFile });
-    console.log('💾 Auth file saved to:', authFile);
-
-    // 6. Create a new page and instantiate App with logged in context
+    // 2. Open browser and inject token into localStorage
+    const context = await browser.newContext();
     const page = await context.newPage();
-    const loggedInApp = new App(page);
 
+    await page.goto('https://api.practicesoftwaretesting.com/users/login'); 
+
+    // Set token in localStorage
+    await page.evaluate((token) => {
+      localStorage.setItem('auth_token', token); 
+    }, token);
+
+    // 3. Use the logged-in app
+    const loggedInApp = new App(page);
     await use(loggedInApp);
 
+    // 4. Cleanup
     await context.close();
   },
 });
