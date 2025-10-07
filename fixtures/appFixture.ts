@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { App } from '../app';
+import { App } from '../tests/app';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +8,7 @@ const USER_EMAIL = process.env.TEST_USER_EMAIL!;
 const USER_PASSWORD = process.env.TEST_USER_PASSWORD!;
 
 interface LoginResponse {
-  token: string; // Adjust if your API returns 'accessToken', etc.
+  access_token: string; // Adjust if your API returns 'accessToken', etc.
 }
 
 export const test = base.extend<{
@@ -49,7 +49,7 @@ export const test = base.extend<{
       throw new Error('Invalid JSON in login response.');
     }
 
-    const token = loginData.token;
+    const token = loginData.access_token;
     if (!token) {
       throw new Error('❌ No token found in login response.');
     }
@@ -58,7 +58,7 @@ export const test = base.extend<{
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    await page.goto('https://api.practicesoftwaretesting.com/users/login'); 
+    await page.goto('users/login'); 
 
     // Set token in localStorage
     await page.evaluate((token) => {
