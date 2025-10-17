@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
 import { isSortedDesc } from './helpers/sortUtils.js';
 
-test.describe('Product sorting by name', () => {
+test.describe('@regression Product sorting by name', () => {
   const testCases = [
     { label: 'Name (Z - A)', sortValue: 'name,desc', isSorted: isSortedDesc }
   ];

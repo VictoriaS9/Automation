@@ -4,7 +4,7 @@ import { generateMockProducts } from './helpers/generateMockProducts';
 
 
 
-test('Мокує /products та перевіряє 20 товарів на сторінці', async ({ page }) => {
+test('@regression Мокує /products та перевіряє 20 товарів на сторінці', async ({ page }) => {
 
   const mockedProducts = generateMockProducts(20);
 

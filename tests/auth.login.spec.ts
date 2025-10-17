@@ -5,7 +5,7 @@ import { AccountPage } from '../pages/account.page';
 import path from 'path';
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
-test('Verify login with valid credentials',  {
+test('@regression Verify login with valid credentials',  {
   tag: '@login',
 }, async ({ page }) => {
   const loginPage = new LoginPage(page)

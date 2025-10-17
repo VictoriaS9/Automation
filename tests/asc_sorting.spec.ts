@@ -3,7 +3,7 @@ import { isSortedAsc } from './helpers/sortUtils.js';
 import { HomePage } from '../pages/home.page';  // Adjust path as needed
 
 
-test.describe('Product sorting by name', () => {
+test.describe('@smoke Product sorting by name', () => {
   const testCases = [
     { label: 'Name (A - Z)',sortValue: 'name,asc', isSorted: isSortedAsc },
   ];

@@ -3,7 +3,7 @@ import { HomePage } from '../pages/home.page';
 import { isNumericSortedDesc, parsePrice } from './helpers/sortUtils.js';
 
 
-test.describe('Product sorting by price', () => {
+test.describe('@regression Product sorting by price', () => {
   const testCases = [
     {
       label: 'Price (High - Low)',

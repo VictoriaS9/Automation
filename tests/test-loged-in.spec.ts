@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/appFixture';
 
-test('Logged in user can add product and checkout', async ({ loggedInApp: app }) => {
+test('@smoke Logged in user can add product and checkout', async ({ loggedInApp: app }) => {
     
   const { page } = app;
   await page.screenshot({ path: 'tests/debug-context.png' });
