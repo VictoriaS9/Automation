@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
 
-test('@smoke User can add "Slip Joint Pliers" to cart', async ({ page }) => {
+test('User can add "Slip Joint Pliers" to cart', { tag: ['@smoke'] }, async ({ page }) => {
   const homePage = new HomePage(page);
 
   await test.step('Navigate to home page', async () => {
@@ -14,7 +14,6 @@ test('@smoke User can add "Slip Joint Pliers" to cart', async ({ page }) => {
 
   await test.step('Verify product details', async () => {
     await homePage.verifyProductDetails('Slip Joint Pliers', '9.17');
-    await homePage.verifyProductDetails('Slip Joint Pliers', '9.17'); // можна залишити один раз, якщо дублювання
   });
 
   await test.step('Add product to cart', async () => {

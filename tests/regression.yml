@@ -17,9 +17,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm ci
-      - run: npx playwright test --grep "@regression"
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Playwright regression tests
+        run: npx playwright test --grep "@regression" --reporter=list,html
+
+      - name: Upload Playwright HTML report
+        if: always() 
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-regression-report
+          path: playwright-report/
