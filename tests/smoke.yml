@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Run Playwright smoke tests
-        run: npx playwright test --grep "@smoke" --reporter=list,html
+        run: npx playwright test --tag "@smoke" --reporter=list,html
 
       - name: Upload Playwright HTML report
         if: always()

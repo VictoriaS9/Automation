@@ -2,8 +2,7 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/home.page';
 import { isNumericSortedAsc, parsePrice } from './helpers/sortUtils.js';
 
-
-test.describe('@regression Product sorting by price', () => {
+test.describe('Product sorting by price', () => {
   const testCases = [
     {
       label: 'Price (Low - High)',
@@ -13,20 +12,24 @@ test.describe('@regression Product sorting by price', () => {
   ];
 
   for (const { label, sortValue, isSorted } of testCases) {
-    test(`Verify sorting by ${label}`, async ({ page }) => {
-      const homePage = new HomePage(page);
+    test(
+      `Verify sorting by ${label}`,
+      { tag: ['@regression'] },
+      async ({ page }) => {
+        const homePage = new HomePage(page);
 
-      await homePage.navigateToHomePage();
-      await homePage.verifySortDropdownVisible();
-      const initialPriceStrings = await homePage.getAllProductPrices();
+        await homePage.navigateToHomePage();
+        await homePage.verifySortDropdownVisible();
+        const initialPriceStrings = await homePage.getAllProductPrices();
 
-      await homePage.selectSortOption(sortValue);
+        await homePage.selectSortOption(sortValue);
 
-      const finalPriceStrings = await homePage.waitForProductPricesToChange(initialPriceStrings);
+        const finalPriceStrings = await homePage.waitForProductPricesToChange(initialPriceStrings);
 
-      const finalPrices = finalPriceStrings.map(parsePrice);
+        const finalPrices = finalPriceStrings.map(parsePrice);
 
-      expect(isSorted(finalPrices)).toBeTruthy();
-    });
+        expect(isSorted(finalPrices)).toBeTruthy();
+      }
+    );
   }
 });

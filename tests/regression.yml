@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Run Playwright regression tests
-        run: npx playwright test --grep "@regression" --reporter=list,html
+        run: npx playwright test --tag "@regression" --reporter=list,html
 
       - name: Upload Playwright HTML report
         if: always() 
